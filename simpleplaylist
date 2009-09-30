@@ -1,0 +1,102 @@
+#!/bin/bash
+
+
+## {{{ About
+#
+# simpleplaylist v0.3
+#
+# License: GPL v2 (GNU Public License)
+#
+# This script writes the currently playing track to simpleplaylist.txt.
+# See simpleplaylist.conf to alter options.
+#
+#
+# Copyright 2007 by Christopher Loessl (hashier@x-berg.de)
+#
+## }}}
+
+## {{{ Variablen
+DIALOG=`which kdialog`
+currentPWD=$(pwd)
+input=""
+DEBUG=0
+## }}} 
+
+## {{{ Functions
+
+#create configfile
+create() {
+    if [ -n "$DIALOG" ]
+    then
+        echo "#" > simpleplaylist.conf
+        echo "# simpleplaylist config" >> simpleplaylist.conf
+		echo "# Change to whatever you want" >> simpleplaylist.conf
+		echo "#" >> simpleplaylist.conf
+        echo "" >> simpleplaylist.conf
+		echo "# path where the simpleplaylist should be saved" >> simpleplaylist.conf
+		echo "# Default: /tmp" >> simpleplaylist.conf
+		echo "path=`$DIALOG --inputbox \"Where should the simpleplaylist be saved?\"`" >> simpleplaylist.conf
+		echo "" >> simpleplaylist.conf
+        echo "# filename of the simpleplaylist" >> simpleplaylist.conf
+		echo "# Default: simpleplaylist.txt" >> simpleplaylist.conf
+        echo "file=`$DIALOG --inputbox \"Under which name should the simpleplaylist be saved?\"`" >> simpleplaylist.conf
+		echo "" >> simpleplaylist.conf
+		echo "DEBUG=0" >> simpleplaylist.conf
+		echo "" >> simpleplaylist.conf
+	else
+        echo "#" > simpleplaylist.conf
+        echo "# simpleplaylist config" >> simpleplaylist.conf
+		echo "# Change to whatever you want" >> simpleplaylist.conf
+		echo "#" >> simpleplaylist.conf
+        echo "" >> simpleplaylist.conf
+		echo "# path where the simpleplaylist should be saved" >> simpleplaylist.conf
+		echo "# Default: /tmp" >> simpleplaylist.conf
+		echo "path=/tmp" >> simpleplaylist.conf
+		echo "" >> simpleplaylist.conf
+        echo "# filename of the simpleplaylist" >> simpleplaylist.conf
+		echo "# Default: simpleplaylist.txt" >> simpleplaylist.conf
+        echo "file=simp" >> simpleplaylist.conf
+		echo "" >> simpleplaylist.conf
+		echo "DEBUG=0" >> simpleplaylist.conf
+		echo "" >> simpleplaylist.conf
+		xmessage "Please open ${PWD}/simpleplaylist.conf in a text editor and change there whatever you want"
+    fi
+}
+## }}}
+
+
+if [ ! -f "simpleplaylist.conf" ]
+then
+    create
+fi
+
+source simpleplaylist.conf
+
+
+while :
+do
+    #if [ ${#DEBUG} -eq 0 ]
+    #then
+    #    echo "input: $input" >> $path/$file.debug
+    #fi
+
+    case $input in
+    	trackChange)
+        PHRASE="$(dcop amarok player artist) - $(dcop amarok player title)"
+		DATE="$(date +'[%d.%m.%y|%H:%M:%S]')"
+		echo -e "${DATE}\t${PHRASE}" >> $path/$file
+        #date +'[%d.%m.%y|%H:%M:%S]%t' | tr -d '\n' >> $path/$file
+        ;;
+        configure)
+    	if [ -n "$DIALOG" ]
+	    then
+	    	kdialog --msgbox "Please open ${PWD}/simpleplaylist.conf in a text editor and change there whatever you want"
+	    else
+	    	xmessage "Please open ${PWD}/simpleplaylist.conf in a text editor and change there whatever you want"
+	    fi
+        ;;
+    esac
+
+	read input
+
+done

@@ -1,0 +1,22 @@
+ simpleplaylist
+
+ Copyright 2008 by Christopher Loessl (hashier@x-berg.de)
+ License: GPL v2 (GNU Public License)
+
+ simpleplaylist is a small and very simple script to keep track of all your
+ played songs in amarok saved in a plain txt file.
+ To access the config file after the first run, use 'config' (or similiar) in amaroK's scripts dialogue.
+
+
+ Please let me know what you like or dislike.
+ Any feedback/comments/critique/suggestions are welcome
+
+
+Version history:
+
+0.3:
+- Minor things
+0.2:
+- DATE	TITLE instead of TITLE		DATE
+0.1:
+- First release.
